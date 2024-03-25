@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import { ref } from 'vue'
+const iframe = ref<HTMLIFrameElement | null>(null)
+
+iframe.value?.addEventListener('message', (event) => {
+  console.log('EVENTO:', event)
+})
+
+window.addEventListener("message", e => console.log(e.data));
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <iframe src="http://localhost:5001"
+      v-resize="{ log: false }"
+      width="100%"
+      frameborder="0"
+      ref="iframe"
+    />
   </main>
 </template>
