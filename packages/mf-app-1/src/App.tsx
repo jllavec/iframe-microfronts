@@ -1,37 +1,38 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { DogsService } from './service/DogsService'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const newCount = () => setCount((count) => count + 1)
-
+  const [dogs, setDogs] = useState([])
+  const [dogBreed, setDogBreed] = useState('')
+  
   useEffect(() => {
-    window.parent.postMessage({ count: count }, '*')
-  }, [count])
+    async function getDogs() {
+      const dogList =  await DogsService.getDogs()
+      setDogs(dogList.data?.message)
+      console.log(dogList.data?.message)
+    }
+    getDogs()
+  }, [])
+
+  const dogList = Object.keys(dogs)
+    .filter((dog: string) => dog.includes(dogBreed))
+    .map((dog: string, index: number) => <button key={`dog-${index}`} onClick={() => dispatchParent(dog)}>{dog}</button>)
+
+
+
+  function dispatchParent(dog: string) {
+    window.parent.postMessage({ dogBreed: dog }, '*')
+  }
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+       <input type="text" value={dogBreed} onChange={(e) => setDogBreed(e.target.value)} />
       </div>
-      <h1>Vite + React</h1>
+      <h1>DogList</h1>
       <div className="card">
-        <button onClick={newCount}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        {dogList}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

@@ -1,2 +1,26 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang=ts>
+  import { onMount } from 'svelte'
+  import { DogsService } from '../service/DogsService'
+
+  let breed = '';
+  let breedImgUrl = ''
+  async function fetchImg(breed: string) {
+    const img = await DogsService.getDogImg(breed)
+    breedImgUrl = img.data?.message
+    console.log(breedImgUrl)
+  }
+
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    breed = urlParams.has('breed') ? urlParams.get('breed') : '';
+
+    fetchImg(breed)
+  });
+</script>
+
+{#if breed}
+    <p>{breed}</p>
+    <img src={breedImgUrl} alt="dog" />
+{:else}
+    <p>No breed provided</p>
+{/if}
