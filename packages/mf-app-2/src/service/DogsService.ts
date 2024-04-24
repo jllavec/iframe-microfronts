@@ -5,7 +5,7 @@ export class DogsService {
     return axios.get('https://dog.ceo/api/breeds/list/all')
   }
 
-  static async getDogImg(breed: string) {
-    return axios.get(`https://dog.ceo/api/breed/${breed}/images/random`)
+  static async getDogImg(breed: string, num: number) {
+    return axios.get(`https://dog.ceo/api/breed/${breed}/images/random/${num}`)
   }
 }

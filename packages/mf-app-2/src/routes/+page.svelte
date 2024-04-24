@@ -3,9 +3,9 @@
   import { DogsService } from '../service/DogsService'
 
   let breed = '';
-  let breedImgUrl = ''
+  let breedImgUrl = ['']
   async function fetchImg(breed: string) {
-    const img = await DogsService.getDogImg(breed)
+    const img = await DogsService.getDogImg(breed, 3)
     breedImgUrl = img.data?.message
     console.log(breedImgUrl)
   }
@@ -19,8 +19,11 @@
 </script>
 
 {#if breed}
-    <p>{breed}</p>
-    <img src={breedImgUrl} alt="dog" />
+    <p>{breed.toUpperCase()}</p>
+    {#each breedImgUrl as imgUrl}
+      <img src={imgUrl} alt="dog" />
+    {/each}
+    <button on:click={() => fetchImg(breed)}>Refresh</button>
 {:else}
     <p>No breed provided</p>
 {/if}
